@@ -5,7 +5,7 @@
 	<artifactId>usecase-application</artifactId>
 	<version>2.0.0-Final</version>
 	<packaging>jar</packaging>
-	<name>UBS CEP Use Cases Application</name>
+	<name> Drools Usecase Application</name>
 	<build>
 		<!-- Maven will append the version to the finalName (which is the name 
 			given to the generated war, and hence the context root) -->
@@ -260,20 +260,11 @@
 
 		<!-- KJar file from project. -->
 		<dependency>
-			<groupId>com.redhat</groupId>
-			<artifactId>usecase1-rules</artifactId>
-			<version>LATEST</version>
-		</dependency>
-		<dependency>
-			<groupId>com.redhat</groupId>
-			<artifactId>usecase2-rules</artifactId>
-			<version>LATEST</version>
-		</dependency>
-		<dependency>
-			<groupId>com.redhat</groupId>
-			<artifactId>usecase3-rules</artifactId>
-			<version>LATEST</version>
-		</dependency>
+                        <groupId>com.redhat</groupId>
+                        <artifactId>clocks-example</artifactId>
+                        <version>LATEST</version>
+                </dependency>
+
 		<dependency>
 			<groupId>com.redhat</groupId>
 			<artifactId>partition-trades-example</artifactId>
