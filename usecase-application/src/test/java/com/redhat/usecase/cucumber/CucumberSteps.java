@@ -39,7 +39,7 @@ public class CucumberSteps {
 			TradeEvent trade = new TradeEvent();
 
 			trade.setId(row.get("Id"));
-			trade.setAccountId(row.get("Investor Id"));
+			trade.setAccountId(row.get("Account Id"));
 			trade.setFinancialAdvisorId(row.get("Advisor Id"));
 			trade.setPrice(Double.parseDouble(row.get("Price")));
 			trade.setQuantity(Integer.parseInt(row.get("Quantity")));
