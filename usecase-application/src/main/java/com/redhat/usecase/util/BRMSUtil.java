@@ -41,6 +41,10 @@ public class BRMSUtil {
 
 	}
 
+	public KieBase getKieBase() {
+		return kBase;
+	}
+
 	public StatelessKieSession getStatelessSession() {
 
 		return kBase.newStatelessKieSession();

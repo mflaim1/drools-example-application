@@ -1,8 +1,9 @@
 Feature: Test Feature to demonstrate partitioning rules and data
-
-Scenario: Multiple trades in 5 minutes with same Account and FA
+#make sure timestamp attribute in TradeEvent is uncommented
+#make sure expiration attribute in TradeEvent is commented
+Scenario: Multiple trades in 5 minutes with same Investor and FA
 Given Trade Events:
-|Id|Account Id|Advisor Id| Price |Quantity|Symbol|Type    |  Timestamp           |
+|Id|Investor Id|Advisor Id| Price |Quantity|Symbol|Type    |  Timestamp           |
 |1 | 1         |  3       | 20.00 | 10     | ANS  | Buy    |  27-09-1990 01:29:33 |
 |2 | 1         |  5       | 20.00 | 11     | ABS  | Sell   |  27-09-1990 01:28:08 |
 |3 | 2         |  2       | 20.00 | 15     | HNG  | Sell   |  27-09-1990 13:25:13 |
@@ -17,7 +18,6 @@ Then I expect the following Reports to be created:
 |Excessive Trading with one Investor  | 1,2              |
 |Excessive Trading with one FA        | 4,5,6            |
 |Excessive Trading with one FA        | 5,6              |
-
 
 
 

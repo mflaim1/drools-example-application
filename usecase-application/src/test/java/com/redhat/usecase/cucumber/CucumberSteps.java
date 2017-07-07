@@ -12,6 +12,7 @@ import org.junit.Assert;
 
 import com.redhat.usecase.services.ReportService;
 import com.redhat.usecase.services.ReportServicePartitioned;
+import com.redhat.usecase.services.ReportServiceSerialized;
 
 import cucumber.api.DataTable;
 import cucumber.api.java.en.Given;
@@ -30,7 +31,10 @@ public class CucumberSteps {
 
 	ReportServicePartitioned reportServicePartitioned = new ReportServicePartitioned();
 
+	ReportServiceSerialized reportServiceSerialized = new ReportServiceSerialized();
+
 	ArrayList<Report> reportsGenerated = new ArrayList<Report>();
+	ArrayList<TradeEvent> tradesInMemory = new ArrayList<TradeEvent>();
 
 	@Given("^Trade Events:$")
 	public void trade_events(DataTable table) throws Throwable {
@@ -39,7 +43,7 @@ public class CucumberSteps {
 			TradeEvent trade = new TradeEvent();
 
 			trade.setId(row.get("Id"));
-			trade.setAccountId(row.get("Account Id"));
+			trade.setAccountId(row.get("Investor Id"));
 			trade.setFinancialAdvisorId(row.get("Advisor Id"));
 			trade.setPrice(Double.parseDouble(row.get("Price")));
 			trade.setQuantity(Integer.parseInt(row.get("Quantity")));
@@ -72,20 +76,25 @@ public class CucumberSteps {
 	@When("^I run the cloud mode example$")
 	public void i_run_the_cloud_mode_example_rules() throws Throwable {
 		// Map a business name to the artifactId
-		reportsGenerated = reportService.fireAllRules("event-processing-mode-example", trades, "cloud", "realtime");
+		reportService.fireAllRules("event-processing-mode-example", trades, "cloud", "realtime");
+		reportsGenerated = reportService.reports;
+
 	}
 
 	@When("^I run the stream mode example$")
 	public void i_run_the_stream_mode_example_rules() throws Throwable {
 		// Map a business name to the artifactId
-		reportsGenerated = reportService.fireAllRules("event-processing-mode-example", trades, "stream", "realtime");
+		reportService.fireAllRules("event-processing-mode-example", trades, "stream", "realtime");
+		reportsGenerated = reportService.reports;
+
 	}
 
 	@When("^the \"([^\"]*)\" rules are executed$")
 	public void the_rule_is_executed(String artifactId) throws Throwable {
 		// Map a business name to the artifactId
 
-		reportsGenerated = reportService.fireAllRules(artifactId, trades, "cloud", "realtime");
+		reportService.fireAllRules(artifactId, trades, "cloud", "realtime");
+		reportsGenerated = reportService.reports;
 
 	}
 
@@ -96,12 +105,21 @@ public class CucumberSteps {
 
 	@When("^I run the realtime clock example$")
 	public void i_run_the_realtime_clock_example_rules() throws Throwable {
-		reportsGenerated = reportService.fireAllRules("clocks-example", trades, "stream", "realtime");
+		reportService.fireAllRules("clocks-example", trades, "stream", "realtime");
+		reportsGenerated = reportService.reports;
 	}
 
 	@When("^I run the pseudo clock example$")
 	public void i_run_the_pseudo_clock_example_rules() throws Throwable {
-		reportsGenerated = reportService.fireAllRules("clocks-example", trades, "stream", "pseudo");
+		reportService.fireAllRules("clocks-example", trades, "stream", "pseudo");
+		reportsGenerated = reportService.reports;
+
+	}
+
+	@When("^I run the serialization example$")
+	public void i_run_the_serialization_example() throws Throwable {
+		// Write code here that turns the phrase above into concrete actions
+		reportsGenerated = reportServiceSerialized.fireAllRules(trades);
 	}
 
 	@Then("^I expect the following Reports to be created:$")
@@ -127,6 +145,33 @@ public class CucumberSteps {
 
 	}
 
+	@When("^I run the explicit expiry example$")
+	public void i_run_the_explicit_expiry_example() throws Throwable {
+		reportService.fireAllRules("memory-management-explicit-expiry", trades, "stream", "pseudo");
+		reportsGenerated = reportService.reports;
+		tradesInMemory = reportService.trades;
+	}
+
+	@Then("^I expect no Trades to exist:$")
+	public void i_expect_no_Trades_to_exist(DataTable arg1) throws Throwable {
+		System.out.println("TRADES EXISTING" + tradesInMemory);
+		Assert.assertTrue(tradesInMemory.isEmpty() || tradesInMemory == null);
+	}
+
+	@When("^I run the explicit removal example$")
+	public void i_run_the_explicit_removal_example() throws Throwable {
+		reportService.fireAllRules("memory-management-explicit-removal", trades, "stream", "realtime");
+		reportsGenerated = reportService.reports;
+		tradesInMemory = reportService.trades;
+	}
+
+	@When("^I run the inferred expiration example$")
+	public void i_run_the_inferred_expiration_example() throws Throwable {
+		reportService.fireAllRules("memory-management-usecase-example", trades, "stream", "pseudo");
+		reportsGenerated = reportService.reports;
+		tradesInMemory = reportService.trades;
+	}
+
 	public Date parseDate(String stringDate) throws ParseException {
 		DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		Date result = df.parse(stringDate);
@@ -136,7 +181,9 @@ public class CucumberSteps {
 	public boolean arraysMatch(ArrayList<Report> expected, ArrayList<Report> generated) {
 		System.out.println("REPORTS GENERATED" + generated.toString());
 		System.out.println("REPORTS EXPECTED" + expected.toString());
-
+		if (expected.size() != generated.size()) {
+			return false;
+		}
 		for (Report reportExpected : expected) {
 			boolean match = false;
 			for (Report reportGenerated : generated) {

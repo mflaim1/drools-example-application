@@ -101,7 +101,7 @@ public class ReportServicePartitioned {
 		// insert rules into session
 		while (iterator.hasNext()) {
 			TradeEvent nextTrade = iterator.next();
-			System.out.println("TRADE: " + nextTrade.toString());
+			// System.out.println("TRADE: " + nextTrade.toString());
 
 			list.add(CommandFactory.newInsert(nextTrade));
 		}

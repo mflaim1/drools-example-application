@@ -16,23 +16,24 @@ import tradeEvent.TradeEvent;
 
 public class ReportService {
 
+	public ArrayList<Report> reports = new ArrayList<Report>();
+
+	public ArrayList<TradeEvent> trades = new ArrayList<TradeEvent>();
+
 	public ReportService() {
 
 	}
 
-	// pass facts and artifact id in via a parameter
-	public ArrayList<Report> fireAllRules(String artifactId, ArrayList<TradeEvent> trades, String mode,
-			String clockType) {
+	public void fireAllRules(String artifactId, ArrayList<TradeEvent> inputTrades, String mode, String clockType) {
 
-		ArrayList<Report> reports = new ArrayList<Report>();
 		TrackingAgendaEventListener listener = new TrackingAgendaEventListener();
 
 		BRMSUtil brmsUtil = new BRMSUtil(artifactId, mode);
 		KieSession ksession = brmsUtil.getStatefulSession(clockType);
 
-		// ksession.addEventListener(listener);
+		ksession.addEventListener(listener);
 
-		for (TradeEvent trade : trades) {
+		for (TradeEvent trade : inputTrades) {
 
 			ksession.insert(trade);
 			if (clockType.equals("pseudo")) {
@@ -43,19 +44,25 @@ public class ReportService {
 		try {
 			ksession.fireAllRules();
 		} finally {
-			QueryResults queryResults = (QueryResults) ksession.getQueryResults("reports generated");
+			QueryResults queryReportsResults = (QueryResults) ksession.getQueryResults("reports generated");
+			QueryResults queryTradesResults = (QueryResults) ksession.getQueryResults("trades");
 
 			// System.out.println(listener.getMatchList());
 
-			for (QueryResultsRow row : queryResults) {
+			for (QueryResultsRow row : queryReportsResults) {
 				Report report = (Report) row.get("$report");
 				reports.add(report);
 			}
+
+			for (QueryResultsRow row : queryTradesResults) {
+				TradeEvent trade = (TradeEvent) row.get("$trade");
+				trades.add(trade);
+			}
+
 			if (ksession != null) {
 
 				ksession.dispose();
 			}
 		}
-		return reports;
 	}
 }

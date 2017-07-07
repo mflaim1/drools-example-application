@@ -1,5 +1,6 @@
 Feature: Test Feature to demonstrate pseudo clock usage
-
+#make sure timestamp attribute in TradeEvent is commented
+#make sure expiration attribute in TradeEvent is commented
 Scenario: Multiple trades in last 5 minutes with same FA
 Given Trade Events:
 |Id|Investor Id|Advisor Id| Price |Quantity|Symbol|Type    |

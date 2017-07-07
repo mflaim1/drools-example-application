@@ -5,7 +5,7 @@
 	<artifactId>usecase-application</artifactId>
 	<version>2.0.0-Final</version>
 	<packaging>jar</packaging>
-	<name> Drools Usecase Application</name>
+	<name>UBS CEP Use Cases Application</name>
 	<build>
 		<!-- Maven will append the version to the finalName (which is the name 
 			given to the generated war, and hence the context root) -->
@@ -260,12 +260,6 @@
 
 		<!-- KJar file from project. -->
 		<dependency>
-                        <groupId>com.redhat</groupId>
-                        <artifactId>clocks-example</artifactId>
-                        <version>LATEST</version>
-                </dependency>
-
-		<dependency>
 			<groupId>com.redhat</groupId>
 			<artifactId>partition-trades-example</artifactId>
 			<version>LATEST</version>
@@ -275,6 +269,27 @@
 			<artifactId>event-processing-mode-example</artifactId>
 			<version>LATEST</version>
 		</dependency>
+		<dependency>
+			<groupId>com.redhat</groupId>
+			<artifactId>serialize-session-example</artifactId>
+			<version>LATEST</version>
+		</dependency>
+
+		<dependency>
+                        <groupId>com.redhat</groupId>
+                        <artifactId>clocks-example</artifactId>
+                        <version>LATEST</version>
+                </dependency>
+		<dependency>
+                        <groupId>com.redhat</groupId>
+                        <artifactId>memory-management-explicit-removal</artifactId>
+                        <version>LATEST</version>
+                </dependency>
+		<dependency>
+                        <groupId>com.redhat</groupId>
+                        <artifactId>memory-management-explicit-expiry</artifactId>
+                        <version>LATEST</version>
+                </dependency>
 		<dependency>
 			<groupId>org.kie</groupId>
 			<artifactId>kie-internal</artifactId>
