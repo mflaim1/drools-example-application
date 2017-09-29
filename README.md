@@ -1,4 +1,3 @@
-This instructions for this project can be found here:
+The instructions on project setup and explanation of code examples can be found here:
 
-https://github.com/mflaim1/drools-example-instructions/blob/master/Setupinstructions.pdf
-https://github.com/mflaim1/drools-example-instructions/blob/master/SessionSerializationWalkthrough.pdf
+https://github.com/mflaim1/drools-example-instructions
